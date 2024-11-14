@@ -1,5 +1,5 @@
 //importing express 
-import express from "express";
+import express, { response } from "express";
 //importing port 
 import {PORT,MONGODBURL} from "./config.js";
 //for connecting mongodb
@@ -87,6 +87,63 @@ app.get('/books/:id',async(request,response) =>{
     }
 })
  
+
+//Route for updating a book
+// Route for updating a book
+app.put('/books/:id', async (request, response) => {
+    try {
+        // Check for required fields
+        const { title, author, description } = request.body;
+        if (!title || !author || !description) {
+            return response.status(400).send({
+                message: 'Send all required fields: title, author, description'
+            });
+        }
+
+        const { id } = request.params;
+
+        // Find and update the book, returning the updated document
+        const result = await Book.findByIdAndUpdate(id, request.body, { new: true });
+
+        // Check if the book exists
+        if (!result) {
+            return response.status(404).json({ message: "Book not found" });
+        }
+
+        // Successfully updated
+        return response.status(200).json({ message: "Book has been updated successfully", data: result });
+    }
+    catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+});
+
+
+//Deleting a Book
+// Route for deleting a book
+app.delete('/books/:id', async (request, response) => {
+    try {
+        const { id } = request.params;
+
+        // Attempt to delete the book by ID
+        const result = await Book.findByIdAndDelete(id);
+
+        // Check if the book was found and deleted
+        if (!result) {
+            return response.status(404).json({ message: "Book not found" });
+        }
+
+        // If deleted successfully, send a success message
+        return response.status(200).json({ message: "Book deleted successfully" });
+
+    } catch (error) {
+        console.log(error.message);
+        // If there's an error, send a 500 status
+        response.status(500).send({ message: error.message });
+    }
+});
+
 
 //here am passing our mongodb url as parameter
 mongoose.connect(MONGODBURL)
