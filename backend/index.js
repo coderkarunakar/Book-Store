@@ -70,6 +70,22 @@ app.get('/books',async(request,response) =>{
         response.status(500).send({message:error.message});
     }
 })
+
+
+//Route for geting all the books from database by id    
+app.get('/books/:id',async(request,response) =>{
+    try{
+        const {id}  = request.params;
+
+        //find is an helper function in mongoose 
+       const book = await Book.findById(id);
+       //here we are trying to print the count i.e books length,and storing our books object inside our data array
+       return response.status(200).json(book);
+    }catch(error){
+        console.log(error.message);
+        response.status(500).send({message:error.message});
+    }
+})
  
 
 //here am passing our mongodb url as parameter
