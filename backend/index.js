@@ -4,7 +4,11 @@ import express, { response } from "express";
 import {PORT,MONGODBURL} from "./config.js";
 //for connecting mongodb
 import mongoose from 'mongoose';
-import {Book} from './models/bookModel.js'
+import {Book} from './models/bookModel.js';
+//here we are importing whole file so we named it as its file name booksRoute
+import booksRoute from './routes/booksRoute.js';
+
+
 
 
 
@@ -15,134 +19,13 @@ app.get('/',(request,response)=>{
     return response.status(234).send('Welcome to library')
 
 });
- 
-
 //in order read our json data we are using a middle ware, with this only our postman reads json data
 //middle ware for parsing request 
 app.use(express.json());
-
-//Route for save a new Book
-
-//creating a book using post
-app.post('/books', async(request,response) =>{
-    try{
-        //here simply i was checking wheather all the necessary field are there or not , if not it will throw an error with status code 400
-
-        if( 
-            !request.body.title ||
-            !request.body.author ||
-            !request.body.description
-        ){
-            return response.status(400).send({
-                message:'Send all required fields: title, author, description'
-            })
-        }
-        //creating a variable for new book
-        const newBook = {
-            title: request.body.title,
-            author:request.body.author,
-            description: request.body.description
-        }
-        //.create a mongoose helper function to create a new document
-        const book = await  Book.create(newBook);
-        //201 means created and .send sends the created book object as the response body
-        return  response.status(201).send(book);
-        
-    }catch(error){
-        console.log(error.message);
-        response.status(500).send({message:error.message});
-    }
-})
-
-
-//Route for geting all the books from database
-app.get('/books',async(request,response) =>{
-    try{
-        //find is an helper function in mongoose 
-       const books = await Book.find({});
-       //here we are trying to print the count i.e books length,and storing our books object inside our data array
-       return response.status(200).json({
-        count:books.length,
-        data:books
-       });
-    }catch(error){
-        console.log(error.message);
-        response.status(500).send({message:error.message});
-    }
-})
-
-
-//Route for geting all the books from database by id    
-app.get('/books/:id',async(request,response) =>{
-    try{
-        const {id}  = request.params;
-
-        //find is an helper function in mongoose 
-       const book = await Book.findById(id);
-       //here we are trying to print the count i.e books length,and storing our books object inside our data array
-       return response.status(200).json(book);
-    }catch(error){
-        console.log(error.message);
-        response.status(500).send({message:error.message});
-    }
-})
- 
-
-//Route for updating a book
-// Route for updating a book
-app.put('/books/:id', async (request, response) => {
-    try {
-        // Check for required fields
-        const { title, author, description } = request.body;
-        if (!title || !author || !description) {
-            return response.status(400).send({
-                message: 'Send all required fields: title, author, description'
-            });
-        }
-
-        const { id } = request.params;
-
-        // Find and update the book, returning the updated document
-        const result = await Book.findByIdAndUpdate(id, request.body, { new: true });
-
-        // Check if the book exists
-        if (!result) {
-            return response.status(404).json({ message: "Book not found" });
-        }
-
-        // Successfully updated
-        return response.status(200).json({ message: "Book has been updated successfully", data: result });
-    }
-    catch (error) {
-        console.log(error.message);
-        response.status(500).send({ message: error.message });
-    }
-});
-
-
-//Deleting a Book
-// Route for deleting a book
-app.delete('/books/:id', async (request, response) => {
-    try {
-        const { id } = request.params;
-
-        // Attempt to delete the book by ID
-        const result = await Book.findByIdAndDelete(id);
-
-        // Check if the book was found and deleted
-        if (!result) {
-            return response.status(404).json({ message: "Book not found" });
-        }
-
-        // If deleted successfully, send a success message
-        return response.status(200).json({ message: "Book deleted successfully" });
-
-    } catch (error) {
-        console.log(error.message);
-        // If there's an error, send a 500 status
-        response.status(500).send({ message: error.message });
-    }
-});
+ //When a request is made to a URL starting with /books, this middleware will be triggered.
+//  booksRoute is a reference to a route handler module it is imported at top
+//here we are using
+app.use('/books',booksRoute);
 
 
 //here am passing our mongodb url as parameter
