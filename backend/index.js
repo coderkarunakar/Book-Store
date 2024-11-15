@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 import {Book} from './models/bookModel.js';
 //here we are importing whole file so we named it as its file name booksRoute
 import booksRoute from './routes/booksRoute.js';
-
+import cors from 'cors';
 
 
 
@@ -27,6 +27,16 @@ app.use(express.json());
 //here we are using
 app.use('/books',booksRoute);
 
+// a middle ware for handling  CORS  Policy
+//Option 1:Allows all Origins with Default of Cors(*)
+app.use(cors())
+
+//Option 2:Allows Custom Origins
+app.use(cors({
+    origin:'http://localhost:3000',
+    methods:['GET','POST','PUT','DELETE'],
+    allowHeaders:['Content-Type'],
+}))
 
 //here am passing our mongodb url as parameter
 mongoose.connect(MONGODBURL)
