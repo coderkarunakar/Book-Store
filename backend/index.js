@@ -9,13 +9,12 @@ const app = express();
 
 // CORS middleware (allow all origins by default)
 
-app.use(cors(
-    {
-        origin:["book-store-frontend-lemon-three.vercel.app"],
-        methods:["GET", "POST", "PUT", "DELETE"], 
-        credentials: true
-    }
-))
+app.use(cors({
+    origin: ["book-store-frontend-lemon-three.vercel.app", "http://localhost:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE"], 
+    credentials: true
+}));
+
 
 // Middleware to parse JSON data
 app.use(express.json());
