@@ -11,11 +11,11 @@ export const App = () => {
 
     // creating all our routes and its paths
     <Routes>
-      <Route path ='' element={<Home/>} />
-      <Route path ='' element={<CreateBook/>} />
-      <Route path ='' element={<ShowBook/>} />
-      <Route path ='' element={<EditBook/>} />
-      <Route path ='' element={<DeleteBook/>} />
+      <Route path ='/' element={<Home/>} />
+      <Route path ='/books/create' element={<CreateBook/>} />
+      <Route path ='/books/details/:id' element={<ShowBook/>} />
+      <Route path ='/books/edit/:id' element={<EditBook/>} />
+      <Route path ='/books/delete/:id' element={<DeleteBook/>} />
     </Routes>
     )
 }
