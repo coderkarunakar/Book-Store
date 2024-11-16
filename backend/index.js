@@ -1,50 +1,35 @@
-//importing express 
-import express, { response } from "express";
-//importing port 
-import {PORT,MONGODBURL} from "./config.js";
-//for connecting mongodb
+import express from "express";
+import { PORT, MONGODBURL } from "./config.js";
 import mongoose from 'mongoose';
-import {Book} from './models/bookModel.js';
-//here we are importing whole file so we named it as its file name booksRoute
+import { Book } from './models/bookModel.js';
 import booksRoute from './routes/booksRoute.js';
 import cors from 'cors';
 
-
-
-
 const app = express();
-//this method will get a resource to our server, the second parameter is a callback here we are receiving req,res
-app.get('/',(request,response)=>{
-    console.log('Karunakarcheckpoint',request);
-    return response.status(234).send('Welcome to library')
 
-});
-//in order read our json data we are using a middle ware, with this only our postman reads json data
-//middle ware for parsing request 
+// CORS middleware (allow all origins by default)
+app.use(cors());
+
+// Middleware to parse JSON data
 app.use(express.json());
- //When a request is made to a URL starting with /books, this middleware will be triggered.
-//  booksRoute is a reference to a route handler module it is imported at top
-//here we are using
-app.use('/books',booksRoute);
 
-// a middle ware for handling  CORS  Policy
-//Option 1:Allows all Origins with Default of Cors(*)
-app.use(cors())
+// Books route handler
+app.use('/books', booksRoute);
 
-//Option 2:Allows Custom Origins
-app.use(cors({
-    origin:'http://localhost:3000',
-    methods:['GET','POST','PUT','DELETE'],
-    allowHeaders:['Content-Type'],
-}))
-
-//here am passing our mongodb url as parameter
-mongoose.connect(MONGODBURL)
-.then(()=>{
-    console.log("App connected to  database");
-    app.listen (PORT ,() =>{
-        console.log(`App is listening to Port :${PORT}`);
-    })
-}).catch((error) =>{
-    console.log(error);
+// Default route
+app.get('/', (request, response) => {
+    console.log('Karunakarcheckpoint', request);
+    return response.status(234).send('Welcome to library');
 });
+
+// Connect to MongoDB and start the server
+mongoose.connect(MONGODBURL)
+    .then(() => {
+        console.log("App connected to database");
+        app.listen(PORT, () => {
+            console.log(`App is listening to Port: ${PORT}`);
+        });
+    })
+    .catch((error) => {
+        console.log(error);
+    });

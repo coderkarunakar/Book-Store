@@ -8,6 +8,8 @@ import { ShowBook } from './pages/ShowBook'
 import { EditBook } from './pages/EditBook'
 export const App = () => {
   return (
+
+    // creating all our routes and its paths
     <Routes>
       <Route path ='' element={<Home/>} />
       <Route path ='' element={<CreateBook/>} />
