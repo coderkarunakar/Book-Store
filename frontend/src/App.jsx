@@ -8,8 +8,21 @@ import { ShowBook } from './pages/ShowBook'
 import { EditBook } from './pages/EditBook'
 export const App = () => {
   return (
-
-    // creating all our routes and its paths
+    <div>
+ {/* Adding a heading for the Book Store */}
+ <h1
+        style={{
+          textAlign: 'center',
+          margin: '20px 0',
+          fontWeight: 'bold',
+          background: 'linear-gradient(to right, #ff7e5f, #feb47b)',
+          WebkitBackgroundClip: 'text',
+          color: 'transparent',
+        }}
+      >
+        Book Store
+      </h1>
+   
     <Routes>
       <Route path ='/' element={<Home/>} />
       <Route path ='/books/create' element={<CreateBook/>} />
@@ -17,6 +30,7 @@ export const App = () => {
       <Route path ='/books/edit/:id' element={<EditBook/>} />
       <Route path ='/books/delete/:id' element={<DeleteBook/>} />
     </Routes>
+    </div>
     )
 }
 
