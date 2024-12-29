@@ -8,7 +8,9 @@ const router = express.Router();
 //creating a book using post
 router.post('/', async(request,response) =>{
     try{
+                //Validation check
         //here simply i was checking wheather all the necessary field are there or not , if not it will throw an error with status code 400
+        // it will be checking inside the request section , under body section wheather we have title,etc or not
 
         if( 
             !request.body.title ||
@@ -26,12 +28,14 @@ router.post('/', async(request,response) =>{
             description: request.body.description
         }
         //.create a mongoose helper function to create a new document
+        //book.create returns promise, await is used to puase execution of the function untill promise resolves,once operation is done resolved value of promise is assigned to book variable
         const book = await  Book.create(newBook);
         //201 means created and .send sends the created book object as the response body
         return  response.status(201).send(book);
         
     }catch(error){
         console.log(error.message);
+        //500-internal server error (something went wrong in the server side) and here message is a js property name
         response.status(500).send({message:error.message});
     }
 })
@@ -40,7 +44,7 @@ router.post('/', async(request,response) =>{
 //Route for geting all the books from database
 router.get('/',async(request,response) =>{
     try{
-        //find is an helper function in mongoose 
+        //find is an helper function in mongoose  to find 
        const books = await Book.find({});
        //here we are trying to print the count i.e books length,and storing our books object inside our data array
        return response.status(200).json({
@@ -49,6 +53,7 @@ router.get('/',async(request,response) =>{
        });
     }catch(error){
         console.log(error.message);
+        //message is an property  in javascript
         response.status(500).send({message:error.message});
     }
 })
